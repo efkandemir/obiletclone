@@ -1,16 +1,19 @@
 import React from "react";
 import image from "../images/tr.png";
+
 const Header = () => {
+
+
   return (
     <>
-      <div className="h-[80px] bg-kirmizi flex">
+      <div className="h-[80px] overflow-x-hidden bg-kirmizi flex">
         <div className="pt-[16px]">
           <span className="ml-[375px] text-5xl text-white font-bold">
             obilet
           </span>
         </div>
 
-        <div className="ml-[560px] mt-[20px] flex">
+        <div className="ml-[540px] mt-[20px] flex">
           <img
             src={image}
             className="border rounded-full mt-[7px] w-[25px] h-[25px] flex items-center justify-center"
