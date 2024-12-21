@@ -3,6 +3,8 @@ import Header from '../components/Header'
 import Navbar from '../components/Navbar'
 import Select from '../components/Select'
 import Cards from '../components/Cards'
+import Footer from '../components/Footer'
+import LoginNotifications from '../components/LoginNotifications'
 const PlanePages = () => {
     return (
         <>
@@ -15,8 +17,9 @@ const PlanePages = () => {
                 Fiyatları obilet'te!</span>
             </div>
             <Cards/>
+            <Footer/>   
         </>
     )
 }
 
-export default PlanePages
+export default PlanePages;
