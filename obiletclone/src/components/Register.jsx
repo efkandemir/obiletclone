@@ -1,8 +1,19 @@
 import React from "react";
 import { IoLogoFacebook } from "react-icons/io";
 import { AiFillGoogleSquare } from "react-icons/ai";
+import axios from 'axios';
+import { useState } from "react";
 
 const Register = ({ onClose }) => {
+    const [email, setEmail] = useState()
+    const [password, setPassword] = useState()
+    /*const handleSubmit = (e) => {
+        e.preventDeafault()
+        axios.post('',{email,password})
+        .then(()=>console.log(result))
+        .catch(err=>console.log(err))
+    };
+    */
     return (
         <>
             {/* Arka Plan Katmanı */}
@@ -52,12 +63,14 @@ const Register = ({ onClose }) => {
                             type="email"
                             placeholder="E-posta Adresi"
                             className="w-full h-[33px] mb-3 p-2 border rounded focus:outline-none"
+                            onChange={(e) => setEmail(e.target.value)}
                         />
                         <div className="text-kirmizi font-semibold mt-1 mb-1 ml-1">E-mail adresi boş bırakılamaz</div>
                         <input
                             type="password"
                             placeholder="Şifre"
                             className="w-full h-[33px] mb-3 p-2 border rounded focus:outline-none"
+                            onChange={(e) => setPassword(e.target.value)}
                         />
                         <div className="text-kirmizi font-semibold mt-1 mb-1 ml-1">Şifre boş bırakılamaz</div>
                         <div className="flex justify-between items-center mb-4">

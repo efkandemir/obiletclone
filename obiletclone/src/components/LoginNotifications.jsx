@@ -5,14 +5,18 @@ import Register from "./Register";
 
 const LoginNotifications = ({ onClose }) => {
     const [showRegister, setShowRegister] = useState(false);
+    
 
     const handleRegisterClick = () => {
+         console.log("Register butonuna tıklandı.")
         setShowRegister(true); // Register modalını aç
     };
     const handleCloseRegister = () => {
         setShowRegister(false); // Register modalını kapatır
         onClose(); // LoginNotifications modalını da kapatır
     };
+
+    
 
 
     return (
@@ -98,6 +102,7 @@ const LoginNotifications = ({ onClose }) => {
                 </>
             )}
             {/* Register Bileşeni */}
+            {console.log("Register modali açıldı.")}
             {showRegister && <Register onClose={handleCloseRegister} />}
         </>
     );
