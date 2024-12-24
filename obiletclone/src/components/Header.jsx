@@ -5,7 +5,6 @@ import LoginNotifications from "./LoginNotifications";
 const Header = () => {
   const [showLogin, setShowLogin] = useState(false); // State tanımlama
 
-
   return (
     <>
       <div className="h-[80px] overflow-x-hidden bg-kirmizi flex">
