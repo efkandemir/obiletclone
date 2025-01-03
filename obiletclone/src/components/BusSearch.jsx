@@ -23,16 +23,9 @@ const BusSearch = () => {
     const normalizedDestination = normalize(destination);
 
     try {
-      setError(null); // Hata sıfırlanır
+      setError(null); // Önceki hatayı sıfırla
       const response = await axios.get(
-        `https://api.collectapi.com/travel/busTicket?data.to=${normalizedDestination}&data.from=${normalizedDeparture}`,
-        {
-          headers: {
-            "content-type": "application/json",
-            Authorization:
-              "apikey 3gPsHZmW1rYgsreXaYLCXu:7xdTE0r13eXaQFfKJzClj9",
-          },
-        }
+        `http://localhost:5000/api/bus-tickets?from=${normalizedDeparture}&to=${normalizedDestination}`
       );
 
       if (response.data.success && response.data.result.length > 0) {
