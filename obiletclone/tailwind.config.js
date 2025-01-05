@@ -17,6 +17,9 @@ export default {
         'lacivert':'#45619d',
         'mavi':'#4285f4',
         'cercevekirmizi':'#d23b38',
+        'bgBus' : '#f2f3f4',
+        'bgBuss' : '#f3f7f8',
+        
       },
     },
   },

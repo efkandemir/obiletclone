@@ -1,17 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import image from "../images/tr.png";
-import LoginNotifications from "./LoginNotifications";
+import LoginModal from "./LoginModal";
 
 const Header = () => {
-  const [showLogin, setShowLogin] = useState(false); // State tanımlama
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [verify, setVerify] = useState(false);
+
+  // Check if the user is logged in when the component loads
+  useEffect(() => {
+    if (localStorage.getItem("authToken")) {
+      setVerify(true); // Set verify to true if authToken exists
+    }
+  }, []);
 
   return (
     <>
       <div className="h-[80px] overflow-x-hidden bg-kirmizi flex">
         <div className="pt-[16px]">
-          <span className="ml-[375px] text-5xl text-white font-bold">
-            obilet
-          </span>
+          <span className="ml-[375px] text-5xl text-white font-bold">obilet</span>
         </div>
 
         <div className="ml-[540px] mt-[20px] flex">
@@ -25,21 +31,31 @@ const Header = () => {
           <span className="ml-[15px] h-[38px] border text-sm"></span>
           <span className="ml-[15px] mt-[5px] text-xl text-white">Yardım</span>
           <span className="ml-[15px] h-[38px] border text-sm"></span>
-          <span className="ml-[15px] mt-[5px] text-xl text-white">
-            Seyahat Sorgula
-          </span>
+          <span className="ml-[15px] mt-[5px] text-xl text-white">Seyahat Sorgula</span>
           <span className="ml-[15px] h-[38px] border text-sm"></span>
-          <span
-            className="ml-[15px] mt-[5px] text-xl text-white cursor-pointer"
-            onClick={() => setShowLogin(true)} // onClick ile state güncelleme
-          >
-            Üye Girişi
-          </span>
+
+          {/* Conditional Rendering: Show either login or user name */}
+          {verify ? (
+            <span className="ml-[15px] mt-[5px] text-xl text-white cursor-pointer">
+              Kerem
+            </span>
+          ) : (
+            <span
+              className="ml-[15px] mt-[5px] text-xl text-white cursor-pointer"
+              onClick={() => setIsModalOpen(true)} // Trigger the login modal
+            >
+              Üye Girişi
+            </span>
+          )}
         </div>
       </div>
 
-      {/* LoginNotifications bileşenini göster */}
-      {showLogin && <LoginNotifications onClose={() => setShowLogin(false)} />}
+      {/* Show the Login Modal when `isModalOpen` is true */}
+      <LoginModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        setVerify={setVerify} // Pass setVerify to LoginModal
+      />
     </>
   );
 };

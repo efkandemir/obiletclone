@@ -12,8 +12,7 @@ app.use(cors());
 
 const authRoutes = require("./routes/auth.js");
 app.use("/api/auth" , authRoutes);
-const busRoutes = require("./routes/bus.js");
-app.use("/api" , busRoutes);
+
 
 
 const connect = async()=>{
