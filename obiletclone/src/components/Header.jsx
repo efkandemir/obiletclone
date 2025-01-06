@@ -37,7 +37,7 @@ const Header = () => {
           {/* Conditional Rendering: Show either login or user name */}
           {verify ? (
             <span className="ml-[15px] mt-[5px] text-xl text-white cursor-pointer">
-              Kerem
+              Hoşgeldiniz...
             </span>
           ) : (
             <span

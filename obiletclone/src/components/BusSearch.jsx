@@ -13,6 +13,7 @@ import kopya3 from "../images/kopya3.png";
 import kopya4 from "../images/kopya4.png";
 import ali from "../images/ali.png";
 import { Modal } from "antd";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const BusSearch = () => {
   const [selectedSeats, setSelectedSeats] = useState([[], [], [], []]); // Her accordion için ayrı koltuk seçimi
@@ -20,7 +21,11 @@ const BusSearch = () => {
   const [times, setTimes] = useState([]); // New state for storing random times
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeImage, setActiveImage] = useState(null);
-
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  // Query parametrelerini al
+  const departure = searchParams.get("departure");
+  const destination = searchParams.get("destination");
   const showModal = (image) => {
     if (event) event.preventDefault(); // Sayfanın başa dönmesini engelle
     setActiveImage(image);
@@ -52,19 +57,43 @@ const BusSearch = () => {
   }, []);
 
   const handleSeatClick = (accordionIndex, seatNumber) => {
-    setSelectedSeats((prevSelectedSeats) =>
-      prevSelectedSeats.map((seats, index) =>
-        index === accordionIndex
-          ? seats.includes(seatNumber)
-            ? seats.filter((seat) => seat !== seatNumber)
-            : seats.length >= 4
-            ? seats
-            : [...seats, seatNumber]
-          : seats
-      )
-    );
-  };
+    setSelectedSeats((prevSelectedSeats) => {
+      const newSelectedSeats = [...prevSelectedSeats];
+      const currentSeats = newSelectedSeats[accordionIndex];
 
+      // Koltuk daha önce seçilmişse kaldır, seçilmemişse ekle
+      if (currentSeats.includes(seatNumber)) {
+        newSelectedSeats[accordionIndex] = currentSeats.filter(
+          (seat) => seat !== seatNumber
+        );
+      } else {
+        if (currentSeats.length < 4) {
+          newSelectedSeats[accordionIndex] = [...currentSeats, seatNumber];
+        }
+      }
+
+      // Koltuklar güncellendikten sonra fiyat ve koltuk bilgisini konsola yazdır
+      const selectedSeatsArray = newSelectedSeats[accordionIndex];
+      const totalPrice = prices[accordionIndex] * selectedSeatsArray.length;
+
+      // O anki zaman bilgisini de al
+      const currentTime = times[accordionIndex];
+
+      // Konsola yazdır
+      console.log(
+        `Accordion ${
+          accordionIndex + 1
+        } - Seçilen Koltuklar: ${selectedSeatsArray.join(", ")}, Fiyat: ${
+          prices[accordionIndex]
+        } TL, Toplam Fiyat: ${totalPrice} TL, Hareket Zamanı: ${currentTime}`
+      );
+
+      return newSelectedSeats;
+    });
+  };
+  const handleOdeme = () => {
+    navigate("/odeme");
+  };
   const seatNumbers = [
     { id: 3, col: 2, row: 1 },
     { id: 2, col: 2, row: 2 },
@@ -134,10 +163,10 @@ const BusSearch = () => {
                     <LuArmchair className="text-xl" />
                     <span className="ml-2 text-xl">2+1</span>
                   </div>
-                  <div className="text-sm mt-1 text-center">
-                    <span>İzmir </span>
+                  <div className="text-sm mt-1 text-center capitalize">
+                    <span>{departure} </span>
                     <span>►</span>
-                    <span> Ankara</span>
+                    <span> {destination}</span>
                   </div>
                 </div>
 
@@ -158,16 +187,17 @@ const BusSearch = () => {
                     Sefer Detayları
                   </button>
                   <div className="w-[750px] h-[220px] border ml-6 mt-6 rounded-l-2xl bg-bgBuss rounded-r-md relative">
-                    <div className="grid grid-cols-13 grid-rows-5 gap-3 ml-2 mt-6 mr-8">
+                    <div className="grid grid-cols-[repeat(13,_40px)] grid-rows-[repeat(5,_40px)] gap-3 ml-4 mt-4 mr-8">
                       <div className="col-start-1 mt-16 row-span-5 flex items-center justify-center">
-                        <PiSteeringWheel className="text-5xl text-gray-400 transform -rotate-90" />
+                        <PiSteeringWheel className="text-5xl  text-gray-400 transform -rotate-90" />
                       </div>
 
                       {seatNumbers.map(({ id, col, row }) => (
                         <div
                           key={id}
+                          style={{ gridColumnStart: col, gridRowStart: row }}
                           onClick={() => handleSeatClick(index, id)}
-                          className={`col-start-${col} row-start-${row} border w-[35px] h-[35px] flex justify-center items-center cursor-pointer rounded-lg ${
+                          className={`border w-[35px] h-[35px] flex justify-center items-center cursor-pointer rounded-lg ${
                             selectedSeats[index].includes(id)
                               ? "bg-green-500 text-white"
                               : "bg-white"
@@ -215,7 +245,10 @@ const BusSearch = () => {
                       </div>
 
                       <div className="mt-[250px] ml-2">
-                        <button className="border bg-green-600 w-[250px] h-[40px] rounded-xl text-white">
+                        <button
+                          onClick={handleOdeme}
+                          className="border bg-green-600 w-[250px] h-[40px] rounded-xl text-white"
+                        >
                           ONAYLA VE DEVAM ET
                         </button>
                       </div>

@@ -20,7 +20,13 @@ const BusSelect = () => {
       date: todayOrTomorrow === "today" ? "Bugün" : "Yarın",
       selectedDate: selectedDate || "Tarih seçilmedi",
     });
-   navigate("/bus-search")
+
+    // "departure" ve "destination" bilgilerini URL'ye query parametre olarak ekliyoruz.
+    navigate(
+      `/bus-search?departure=${encodeURIComponent(
+        departure
+      )}&destination=${encodeURIComponent(destination)}`
+    );
   };
 
   return (
@@ -65,10 +71,10 @@ const BusSelect = () => {
       {/* Gidiş Tarihi */}
       <div className="flex flex-col items-center justify-center bg-gray-100 p-2 rounded-lg w-[140px] h-[66px] relative">
         <span className="text-gray-500 text-sm">Gidiş Tarihi</span>
-        <DatePicker 
-          onChange={handleDateChange} 
-          placeholder="Tarih seç" 
-          className="w-full " 
+        <DatePicker
+          onChange={handleDateChange}
+          placeholder="Tarih seç"
+          className="w-full "
         />
       </div>
 
