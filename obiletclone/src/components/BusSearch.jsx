@@ -16,16 +16,20 @@ import { Modal } from "antd";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 const BusSearch = () => {
-  const [selectedSeats, setSelectedSeats] = useState([[], [], [], []]); // Her accordion için ayrı koltuk seçimi
+  const [selectedSeats, setSelectedSeats] = useState([[], [], [], []]);
   const [prices, setPrices] = useState([]);
-  const [times, setTimes] = useState([]); // New state for storing random times
+  const [times, setTimes] = useState([]);
+  const [seatDetails, setSeatDetails] = useState([]); // Yeni state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeImage, setActiveImage] = useState(null);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  console.log(seatDetails);
   // Query parametrelerini al
   const departure = searchParams.get("departure");
   const destination = searchParams.get("destination");
+  const date = searchParams.get("date");
+
   const showModal = (image) => {
     if (event) event.preventDefault(); // Sayfanın başa dönmesini engelle
     setActiveImage(image);
@@ -61,7 +65,6 @@ const BusSearch = () => {
       const newSelectedSeats = [...prevSelectedSeats];
       const currentSeats = newSelectedSeats[accordionIndex];
 
-      // Koltuk daha önce seçilmişse kaldır, seçilmemişse ekle
       if (currentSeats.includes(seatNumber)) {
         newSelectedSeats[accordionIndex] = currentSeats.filter(
           (seat) => seat !== seatNumber
@@ -71,28 +74,42 @@ const BusSearch = () => {
           newSelectedSeats[accordionIndex] = [...currentSeats, seatNumber];
         }
       }
-
-      // Koltuklar güncellendikten sonra fiyat ve koltuk bilgisini konsola yazdır
-      const selectedSeatsArray = newSelectedSeats[accordionIndex];
-      const totalPrice = prices[accordionIndex] * selectedSeatsArray.length;
-
-      // O anki zaman bilgisini de al
-      const currentTime = times[accordionIndex];
-
-      // Konsola yazdır
-      console.log(
-        `Accordion ${
-          accordionIndex + 1
-        } - Seçilen Koltuklar: ${selectedSeatsArray.join(", ")}, Fiyat: ${
-          prices[accordionIndex]
-        } TL, Toplam Fiyat: ${totalPrice} TL, Hareket Zamanı: ${currentTime}`
-      );
+      const updatedSeatDetails = newSelectedSeats.map((seats, index) => ({
+        accordionIndex: index + 1,
+        seats,
+        pricePerSeat: prices[index],
+        totalPrice: prices[index] * seats.length,
+        departureTime: times[index],
+      }));
+      setSeatDetails(updatedSeatDetails);
 
       return newSelectedSeats;
     });
   };
   const handleOdeme = () => {
-    navigate("/odeme");
+    const selectedAccordion = seatDetails.find(
+      (detail) => detail.seats.length > 0
+    );
+
+    if (selectedAccordion) {
+      const { accordionIndex, seats, pricePerSeat, totalPrice, departureTime } =
+        selectedAccordion;
+
+      const queryParams = new URLSearchParams({
+        departure,
+        destination,
+        date,
+        accordionIndex,
+        seats: seats.join(","),
+        pricePerSeat,
+        totalPrice,
+        departureTime,
+      }).toString();
+
+      navigate(`/odeme?${queryParams}`);
+    } else {
+      alert("Lütfen bir koltuk seçin!");
+    }
   };
   const seatNumbers = [
     { id: 3, col: 2, row: 1 },

@@ -19,7 +19,8 @@ export default {
         'cercevekirmizi':'#d23b38',
         'bgBus' : '#f2f3f4',
         'bgBuss' : '#f3f7f8',
-        
+        'odemeBtn' : '#50ae89',
+        'odemeBtn2' : '#439473',
       },
     },
   },

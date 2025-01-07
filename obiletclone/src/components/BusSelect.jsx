@@ -14,18 +14,21 @@ const BusSelect = () => {
   };
   const navigate = useNavigate();
   const handleSearch = () => {
-    console.log({
-      departure,
-      destination,
-      date: todayOrTomorrow === "today" ? "Bugün" : "Yarın",
-      selectedDate: selectedDate || "Tarih seçilmedi",
-    });
+    // Bugün ve Yarın için tarih formatı oluşturma
+    const today = new Date();
+    const tomorrow = new Date();
+    tomorrow.setDate(today.getDate() + 1);
 
-    // "departure" ve "destination" bilgilerini URL'ye query parametre olarak ekliyoruz.
+    const formattedDate =
+      todayOrTomorrow === "today"
+        ? today.toISOString().split("T")[0] // YYYY-MM-DD formatında
+        : todayOrTomorrow === "tomorrow"
+        ? tomorrow.toISOString().split("T")[0]
+        : selectedDate; // Eğer kullanıcı tarih seçtiyse, o tarihi al
+
+    // Query parametrelere tarihi de ekle
     navigate(
-      `/bus-search?departure=${encodeURIComponent(
-        departure
-      )}&destination=${encodeURIComponent(destination)}`
+      `/bus-search?departure=${encodeURIComponent(departure)}&destination=${encodeURIComponent(destination)}&date=${encodeURIComponent(formattedDate || "")}`
     );
   };
 
