@@ -4,7 +4,6 @@ import Navbar from '../components/Navbar'
 import Select from '../components/Select'
 import Cards from '../components/Cards'
 import Footer from '../components/Footer'
-import LoginNotifications from '../components/LoginNotifications'
 import HotelSelect from '../components/HotelSelect'
 
 const HotelPage = () => {

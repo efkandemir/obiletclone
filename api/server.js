@@ -12,6 +12,10 @@ app.use(cors());
 
 const authRoutes = require("./routes/auth.js");
 app.use("/api/auth" , authRoutes);
+
+const busRoutes = require("./routes/bus.js");
+app.use("/api/bus" , busRoutes);
+
 const connect = async()=>{
     try {
         await mongoose.connect(process.env.MONGO_URI);
@@ -20,6 +24,7 @@ const connect = async()=>{
         console.log(error);
     }
 }
+
 
 app.get("/" ,(req,res)=>{
     res.send("Hello World => Author:Efkan Demir!");
