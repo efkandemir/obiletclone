@@ -15,7 +15,8 @@ const SeyahatPage = () => {
     try {
       const payload = atob(token.split(".")[1]);
       const decoded = JSON.parse(payload);
-      return decoded.userId;
+      const { userId } = decoded;
+      return userId;
     } catch (error) {
       console.log("Token decoded Edilemedi!", error);
       return null;
@@ -24,8 +25,8 @@ const SeyahatPage = () => {
 
   const token = localStorage.getItem("authToken");
   const userId = getInfoFromToken(token);
-  const [fetchingData, setFetchingData] = useState(null);
-
+  const [fetchingData, setFetchingData] = useState();
+  console.log(fetchingData);
   const fetchData = async (userId) => {
     try {
       const response = await fetch(
@@ -33,12 +34,11 @@ const SeyahatPage = () => {
       );
       if (!response.ok) {
         console.log("Veri Bulunamadı!");
-        return;
       }
       const data = await response.json();
       setFetchingData(data);
     } catch (error) {
-      console.error("Veri çekme hatası:", error);
+      console.log(error);
     }
   };
 
@@ -69,50 +69,57 @@ const SeyahatPage = () => {
       <div className="flex flex-row">
         <ProfileNavbar />
         {fetchingData ? (
-          <div className="w-full ml-8 mt-8">
-            <div className="flex flex-row items-center mb-4">
+          <div className="w-[930px] h-auto border border-gray-700 ml-[68px] mt-[104px] ">
+            <div className="flex flex-row">
               <img
                 src={getImageByAccordionIndex(fetchingData.accordionIndex)}
                 alt="Seyahat"
-                className="w-[80px] h-[40px] object-cover"
+                className="w-[100px] h-[40px] ml-4 mt-4 object-cover"
               />
-              <div className="ml-4">
-                <h2 className="text-lg font-semibold">
-                  {fetchingData.departure} → {fetchingData.destination}
-                </h2>
-                <p className="text-sm text-gray-500">
+              <div className="flex flex-col">
+                <span className="ml-[295px] mt-4 text-gray-700">
                   {fetchingData.date} - {fetchingData.departureTime}
-                </p>
+                </span>
+                <span className="ml-[300px] text-gray-700">
+                  {fetchingData.departure}--{fetchingData.destination}
+                </span>
               </div>
             </div>
-
-            <div className="border p-4 bg-white rounded-lg shadow">
-              <h3 className="text-md font-semibold mb-4">Yolcu Listesi</h3>
-              <div className="space-y-4">
-                {fetchingData.passenger.map((passenger, index) => (
-                  <div
-                    key={passenger._id}
-                    className="flex justify-between items-center border-b pb-2"
-                  >
-                    <div>
-                      <p className="text-md font-medium">
-                        {index + 1}. {passenger.name}
-                      </p>
-                      <p className="text-sm text-gray-600">TC: {passenger.tcNo}</p>
-                      <p className="text-sm text-gray-600">
-                        Vatandaş: {passenger.isNotCitizen ? "Hayır" : "Evet"}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-md">Koltuk No: {passenger.seatNumber}</p>
-                      <p className="text-md">
-                        Ücret: {parseFloat(fetchingData.pricePerSeat)} TL
-                      </p>
-                    </div>
+            {fetchingData.passenger.map((passenger, index) => (
+              <div>
+                <div
+                  key={passenger._id}
+                  className="w-[930px] flex flex-row mt-4 justify-between pr-4 pl-4 border-t-2 pt-4"
+                >
+                  <div className="flex flex-col">
+                    <span className="text-xl text-gray-700 font-semibold">
+                      {index + 1} . {passenger.name}
+                    </span>
+                    <span className="text-green-600 hover:underline cursor-pointer select-none">
+                      Yolcularıma Kaydet
+                    </span>
                   </div>
-                ))}
-                <div className="flex justify-end">
-                  <p className="font-bold">
+                  <div className="flex flex-col">
+                    <span className="text- text-gray-700 font-semibold">
+                      PNR NO
+                    </span>
+                    <span>152895</span>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-xl text-gray-700 font-semibold">
+                      Koltuk No
+                    </span>
+                    <span>{passenger.seatNumber}</span>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-xl text-gray-700 font-semibold">
+                      Tutar
+                    </span>
+                    <span>{parseFloat(fetchingData.pricePerSeat)} TL</span>
+                  </div>
+                </div>
+                <div className="">
+                  <p className="font-bold ml-4">
                     Toplam Tutar:{" "}
                     {fetchingData.passenger.length *
                       parseFloat(fetchingData.pricePerSeat)}{" "}
@@ -120,7 +127,7 @@ const SeyahatPage = () => {
                   </p>
                 </div>
               </div>
-            </div>
+            ))}
           </div>
         ) : (
           <span>Veri Bulunamadı</span>

@@ -47,16 +47,18 @@ router.post("/busTicket" , async(req,res)=>{
     }
 });
 
-router.get("/busTicket/:userId" , async(req,res)=>{
+router.get("/busTicket/:userId", async (req, res) => {
     try {
-        const userId = req.body;
-        const data = await Bus.findOne(userId);
-        if(!data || data.length === 0){
-            res.status(404).json("Veri Bulunamadı!");
-        }
-        res.status(200).json(data);
+      const userId = req.params.userId; 
+      const tickets = await Bus.find({ userId }); 
+  
+      if (!tickets || tickets.length === 0) {
+        return res.status(404).json("Veri Bulunamadı!"); 
+      }
+  
+      res.status(200).json(tickets); 
     } catch (error) {
-        res.status(500).json(error);
+      res.status(500).json(error); 
     }
-}) ;
+  });
 module.exports = router;
